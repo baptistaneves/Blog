@@ -24,6 +24,46 @@ namespace Blog.Domain.Entities.Categories
         /// <exception cref="CategoryNotValidException"></exception>
         public static Category CreateCategory(string description)
         {
+            return CreateValidation(description);
+        }
+
+        /// <summary>
+        /// Update category
+        /// </summary>
+        /// <param name="description">Description category</param>
+        /// <exception cref="CategoryNotValidException"></exception>
+        /// <returns see cref="Category"></returns>
+        public void UpdateCategory(string description)
+        {
+            UpdateValidation(description);
+
+            Description = description;
+            LastModified = DateTime.UtcNow;
+        }
+
+        private void UpdateValidation(string description)
+        {
+            var validator = new CategoryValidator();
+
+            var objToValidate = new Category
+            {
+                Description = description
+            };
+
+            var validationResult = validator.Validate(objToValidate);
+
+            if (!validationResult.IsValid)
+            {
+                var exception = new CategoryNotValidException("Categoria inválida");
+
+                validationResult.Errors.ForEach(error => exception.ValidationErrors.Add(error.ErrorMessage));
+
+                throw exception;
+            }
+        }
+
+        private static Category CreateValidation(string description)
+        {
             var validator = new CategoryValidator();
 
             var objToValidate = new Category
@@ -34,39 +74,17 @@ namespace Blog.Domain.Entities.Categories
             };
 
             var validationResult = validator.Validate(objToValidate);
-            if (validationResult.IsValid) return objToValidate;
 
-            var exception = new CategoryNotValidException("Categoria inválida");
-
-            validationResult.Errors.ForEach(error => exception.ValidationErrors.Add(error.ErrorMessage));
-
-            throw exception;
-        }
-
-        /// <summary>
-        /// Update category
-        /// </summary>
-        /// <param name="description">Description category</param>
-        /// <exception cref="CategoryNotValidException"></exception>
-        /// <returns see cref="Category"></returns>
-        public static Category UpdateCategory(string description)
-        {
-            var validator = new CategoryValidator();
-
-            var objToValidate = new Category
+            if (!validationResult.IsValid)
             {
-                Description = description,
-                LastModified = DateTime.UtcNow
-            };
+                var exception = new CategoryNotValidException("Categoria inválida");
 
-            var validationResult = validator.Validate(objToValidate);
-            if (validationResult.IsValid) return objToValidate;
-            
-            var exception = new CategoryNotValidException("Categoria inválida");
+                validationResult.Errors.ForEach(error => exception.ValidationErrors.Add(error.ErrorMessage));
 
-            validationResult.Errors.ForEach(error => exception.ValidationErrors.Add(error.ErrorMessage));
+                throw exception;
+            }
 
-            throw exception;
+            return objToValidate;
         }
     }
 }

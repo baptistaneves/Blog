@@ -187,6 +187,10 @@ namespace Blog.Dal.Migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("varchar(30)");
+
                     b.HasKey("UserProfileId");
 
                     b.ToTable("UsersProfiles", (string)null);

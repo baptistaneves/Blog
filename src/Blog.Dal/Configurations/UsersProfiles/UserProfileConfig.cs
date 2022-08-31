@@ -13,6 +13,9 @@ namespace Blog.Dal.Configurations.UsersProfiles
             builder.Property(up => up.IdentityId)
                 .HasColumnType("varchar(255)");
 
+            builder.Property(up => up.Role)
+               .HasColumnType("varchar(30)");
+
             builder.OwnsOne(up => up.BasicInfo);
 
             builder.HasMany(up => up.Posts)

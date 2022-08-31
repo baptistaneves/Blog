@@ -8,6 +8,7 @@ namespace Blog.Domain.Aggregates.UserProfileAggregate
         public string IdentityId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime LastModified { get; private set; }
+        public string Role { get; private set; }
         public BasicInfo BasicInfo { get; private set; }
 
         //EF - Relation
@@ -25,11 +26,12 @@ namespace Blog.Domain.Aggregates.UserProfileAggregate
         /// <param name="identityId">Identifier of identity user</param>
         /// <param name="basicInfo">Basic information of the user profile</param>
         /// <returns see cref="UserProfile"></returns>
-        public static UserProfile CreateUserProfile(string identityId, BasicInfo basicInfo)
+        public static UserProfile CreateUserProfile(string identityId, string role, BasicInfo basicInfo)
         {
             return new UserProfile
             {
                 IdentityId = identityId,
+                Role = role,
                 CreatedAt = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow,
                 BasicInfo = basicInfo
@@ -41,7 +43,7 @@ namespace Blog.Domain.Aggregates.UserProfileAggregate
         /// </summary>
         /// <param name="newInfo">Basic information</param>
         /// <returns see cref="UserProfile></returns>
-        public static UserProfile UpdateBasicInfo(BasicInfo newInfo)
+        public UserProfile UpdateBasicInfo(BasicInfo newInfo)
         {
             return new UserProfile
             {

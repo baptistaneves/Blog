@@ -7,7 +7,7 @@ namespace Blog.Domain.Validatores.Posts
     {
         public PostUpdateValidator()
         {
-            RuleFor(p => p.Category)
+            RuleFor(p => p.CategoryId)
                 .NotEmpty().WithMessage("A categoria da notícia deve ser informada");
 
             RuleFor(p => p.Title)

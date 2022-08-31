@@ -9,13 +9,12 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Categories\" />
-    <Folder Include="UserProfiles\" />
-    <Folder Include="Posts\" />
+    <ProjectReference Include="..\Blog.Dal\Blog.Dal.csproj" />
   </ItemGroup>
 
 </Project>

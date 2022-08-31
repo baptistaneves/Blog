@@ -6,3 +6,7 @@ global using Blog.Api.Options;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.Versioning;
 global using Microsoft.AspNetCore.Mvc.ApiExplorer;
+global using Blog.Api.Filters;
+global using MediatR;
+global using AutoMapper;
+global using Microsoft.AspNetCore.Authorization;

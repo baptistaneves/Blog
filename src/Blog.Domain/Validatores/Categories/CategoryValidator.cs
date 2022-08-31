@@ -9,7 +9,7 @@ namespace Blog.Domain.Validatores.Categories
         {
             RuleFor(c => c.Description)
                 .NotEmpty().WithMessage("A descrição da categoria deve ser informada")
-                .MinimumLength(5).WithMessage("A descrição deve ter no mínimo 5 caracteres");
+                .MinimumLength(4).WithMessage("A descrição deve ter no mínimo 4 caracteres");
         }
     }
 }

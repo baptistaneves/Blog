@@ -9,11 +9,11 @@ namespace Blog.Domain.Validatores.UsersProfiles
         {
             RuleFor(bi => bi.FirstName)
                 .NotEmpty().WithMessage("O primeiro nome deve ser informado")
-                .MinimumLength(5).WithMessage("O primeiro nome deve ter no mínimo 5 caracteres");
+                .MinimumLength(3).WithMessage("O primeiro nome deve ter no mínimo 5 caracteres");
 
             RuleFor(bi => bi.LastName)
                 .NotEmpty().WithMessage("O último nome deve ser informado")
-                 .MinimumLength(5).WithMessage("O último nome deve ter no mínimo 5 caracteres");
+                 .MinimumLength(3).WithMessage("O último nome deve ter no mínimo 5 caracteres");
 
             RuleFor(bi => bi.EmailAddress)
                 .NotEmpty().WithMessage("O e-mail deve ser informado")
