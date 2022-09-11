@@ -18,6 +18,26 @@ namespace Blog.Dal.Configurations.UsersProfiles
 
             builder.OwnsOne(up => up.BasicInfo);
 
+            builder.OwnsOne(up => up.BasicInfo)
+                .Property(bi => bi.EmailAddress)
+                .HasColumnType("varchar(255)")
+                .HasColumnName("EmailAddress");
+
+            builder.OwnsOne(up => up.BasicInfo)
+               .Property(bi => bi.FirstName)
+               .HasColumnType("varchar(100)")
+               .HasColumnName("FirstName");
+
+            builder.OwnsOne(up => up.BasicInfo)
+              .Property(bi => bi.LastName)
+              .HasColumnType("varchar(100)")
+              .HasColumnName("LastName");
+
+            builder.OwnsOne(up => up.BasicInfo)
+              .Property(bi => bi.Phone)
+              .HasColumnType("varchar(50)")
+              .HasColumnName("Phone");
+
             builder.HasMany(up => up.Posts)
                 .WithOne(p => p.UserProfile)
                 .HasForeignKey(p => p.UserProfileId);

@@ -4,11 +4,11 @@ using Blog.Domain.Validatores.Posts;
 
 namespace Blog.Domain.Aggregates.PostAggregate
 {
-    public class PostCommentResponse
+    public class CommentAnswer
     {
-        private PostCommentResponse() { }
+        private CommentAnswer() { }
 
-        public Guid PostCommentResponseId { get; private set; }
+        public Guid CommentAnswerId { get; private set; }
         public Guid PostCommentId { get; private set; }
         public Guid UserProfileId { get; private set; }
         public string Text { get; private set; }
@@ -25,12 +25,12 @@ namespace Blog.Domain.Aggregates.PostAggregate
         /// <param name="userProfileId">User profile ID</param>
         /// <param name="commentId">Comment ID</param>
         /// <param name="text">Text post comment response</param>
-        /// <returns see cref="PostCommentResponse"></returns>
-        public static PostCommentResponse CreateCommentResponse(Guid userProfileId, Guid commentId, string text)
+        /// <returns see cref="CommentAnswer"></returns>
+        public static CommentAnswer CreateCommentAnswer(Guid userProfileId, Guid commentId, string text)
         {
             var validator = new PostCommentResponseValidator();
 
-            var objToValidate = new PostCommentResponse
+            var objToValidate = new CommentAnswer
             {
                 UserProfileId = userProfileId,
                 PostCommentId = commentId,
@@ -42,7 +42,7 @@ namespace Blog.Domain.Aggregates.PostAggregate
             var validationResult = validator.Validate(objToValidate);
             if (validationResult.IsValid) return objToValidate;
 
-            var exception = new PostCommentResponseNotValidException("");
+            var exception = new CommentAnswerNotValidException("");
 
             validationResult.Errors.ForEach(error => exception.ValidationErrors.Add(error.ErrorMessage));
 
@@ -53,11 +53,11 @@ namespace Blog.Domain.Aggregates.PostAggregate
         /// Update comment response text
         /// </summary>
         /// <param name="newText">Text comment</param>
-        public void UpdateCommentResponseText(string newText)
+        public void UpdateCommentAnswerText(string newText)
         {
-            if(!string.IsNullOrEmpty(newText))
+            if(string.IsNullOrEmpty(newText))
             {
-                var exception = new PostCommentResponseNotValidException("Resposta não pode ser actualizada. " +
+                var exception = new CommentAnswerNotValidException("Resposta não pode ser actualizada. " +
                     "O texto digitado não é válido");
 
                 exception.ValidationErrors.Add("O texto digitado é nulo ou contém apenas espaços vázios");

@@ -2,7 +2,7 @@
 
 namespace Blog.Api.Contracts.Posts.Requests
 {
-    public class CreatePostRequest
+    public class CreatePost
     {
         [Required(ErrorMessage = "A categoria da notícia deve ser informada")]
         public Guid CategoryId { get; set; }
@@ -14,6 +14,6 @@ namespace Blog.Api.Contracts.Posts.Requests
         public string Content { get; set; }
 
         [Required(ErrorMessage = "Selecione uma imagem para esta notícia")]
-        public string Image { get; set; }
+        public IFormFile Image { get; set; }
     }
 }

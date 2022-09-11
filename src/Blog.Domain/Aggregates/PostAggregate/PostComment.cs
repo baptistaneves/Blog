@@ -6,8 +6,8 @@ namespace Blog.Domain.Aggregates.PostAggregate
 {
     public class PostComment
     {
-        private readonly List<PostCommentResponse> _responses = new List<PostCommentResponse>();
-        private readonly List<PostCommentReaction> _reactions = new List<PostCommentReaction>();
+        private readonly List<CommentAnswer> _answers = new List<CommentAnswer>();
+        private readonly List<CommentReaction> _reactions = new List<CommentReaction>();
 
         private PostComment() { }
 
@@ -21,8 +21,8 @@ namespace Blog.Domain.Aggregates.PostAggregate
         //EF - Relation
         public UserProfile UserProfile { get; private set; }
         public Post Post { get; private set; }
-        public IEnumerable<PostCommentResponse> Responses { get { return _responses; } }
-        public IEnumerable<PostCommentReaction> Reactions { get { return _reactions; } }
+        public IEnumerable<CommentAnswer> Answers { get { return _answers; } }
+        public IEnumerable<CommentReaction> Reactions { get { return _reactions; } }
 
         /// <summary>
         /// Create post comment
@@ -78,29 +78,29 @@ namespace Blog.Domain.Aggregates.PostAggregate
             LastModified = DateTime.UtcNow;
         }
 
-        public void AddCommetResponse(PostCommentResponse response)
+        public void AddCommetAnswer(CommentAnswer response)
         {
-            _responses.Add(response);
+            _answers.Add(response);
         }
 
-        public void RemoveCommentResponse(PostCommentResponse toRemove)
+        public void RemoveCommentAnswer(CommentAnswer toRemove)
         {
-            _responses.Remove(toRemove);
+            _answers.Remove(toRemove);
         }
 
-        public void UpdateCommentResponse(Guid commentResponseId, string updatedText)
+        public void UpdateCommentAnswer(Guid commentResponseId, string updatedText)
         {
-            var commentResponse = _responses.FirstOrDefault(r => r.PostCommentResponseId == commentResponseId);
+            var commentResponse = _answers.FirstOrDefault(r => r.CommentAnswerId == commentResponseId);
             if(commentResponse != null)
-                commentResponse.UpdateCommentResponseText(updatedText);
+                commentResponse.UpdateCommentAnswerText(updatedText);
         }
 
-        public void AddReactionComment(PostCommentReaction reaction)
+        public void AddReactionComment(CommentReaction reaction)
         {
             _reactions.Add(reaction);
         }
 
-        public void RemoveCommentReaction(PostCommentReaction toRemove)
+        public void RemoveCommentReaction(CommentReaction toRemove)
         {
             _reactions.Remove(toRemove);
         }

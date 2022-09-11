@@ -13,7 +13,7 @@ namespace Blog.Dal.Configurations.Posts
             builder.Property(p => p.Text)
                 .HasColumnType("varchar(max)");
 
-            builder.HasMany(p => p.Responses)
+            builder.HasMany(p => p.Answers)
                 .WithOne(c => c.PostComment)
                 .HasForeignKey(c => c.PostCommentId);
 

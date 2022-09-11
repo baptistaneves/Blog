@@ -36,6 +36,30 @@
             public const string CreatePost = "nova-noticia";
             public const string RemovePost = "remover-noticia/{postId}";
             public const string UpdatePost = "actualizar-noticia/{postId}";
+
+            //Comments
+            public const string GetAllPostComments = "{postId}/comentarios";
+            public const string GetCommentById = "{postId}/comentario/{commentId}";
+            public const string RemovePostComment = "{postId}/remover-comentario/{commentId}";
+            public const string UpdateComment = "{postId}/editar-comentario/{commentId}";
+            public const string AddPostComment = "{postId}/adicionar-comentario";
+
+            //Reactions
+            public const string GetAllPostReactions = "{postId}/reacoes";
+            public const string AddPostReaction = "{postId}/adicionar-reacao";
+            public const string RemovePostReaction = "{postId}/remover-reacao/{reactionId}";
+
+            //Comment Response
+            public const string GetAllCommentAnswers = "{postId}/comentario/{commentId}/respostas";
+            public const string GetCommentAnswerById = "{postId}/comentario/{commentId}/resposta/{commentAnswerId}";
+            public const string AddCommentAnswer = "{postId}/comentario/{commentId}/adicionar-resposta";
+            public const string UpdateCommentAnswer = "{postId}/comentario/{commentId}/atualizar-resposta/{commentAnswerId}";
+            public const string RemoveCommentAnswer = "{postId}/comentario/{commentId}/remover-resposta/{commentAnswerId}";
+
+            //Comment Reaction
+            public const string GetAllCommentReactions = "{postId}/comentario/{commentId}/reacoes";
+            public const string AddCommentReaction = "{postId}/comentario/{commentId}/adicionar-reacao";
+            public const string RemoveCommentReaction = "{postId}/comentario/{commentId}/remover-reacao/{reactionId}";
         }
     }
 }

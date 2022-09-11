@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Blog.Dal.Configurations.Posts
 {
-    internal class PostCommentResponseConfig : IEntityTypeConfiguration<PostCommentResponse>
+    internal class CommentAnswerConfig : IEntityTypeConfiguration<CommentAnswer>
     {
-        public void Configure(EntityTypeBuilder<PostCommentResponse> builder)
+        public void Configure(EntityTypeBuilder<CommentAnswer> builder)
         {
-            builder.HasKey(p => p.PostCommentResponseId);
+            builder.HasKey(p => p.CommentAnswerId);
 
             builder.Property(p => p.Text)
                 .HasColumnType("varchar(max)");
 
-            builder.ToTable("PostCommentResponses");
+            builder.ToTable("CommentAnswers");
         }
     }
 }

@@ -9,9 +9,25 @@ namespace Blog.Api.MappingProfiles
     {
         public PostMapping()
         {
-            CreateMap<CreatePostRequest, CreatePostCommand>();
-            CreateMap<UpdatePostRequest, UpdatePostCommand>();
+            CreateMap<CreatePost, CreatePostCommand>();
+            CreateMap<UpdatePost, UpdatePostCommand>();
             CreateMap<Post, PostResponse>();
+
+            CreateMap<PostComment, PostCommentResponse>()
+                .ForMember(dest => dest.UserFullName, opt => 
+                   opt.MapFrom(src => src.UserProfile.BasicInfo.FirstName + " " + src.UserProfile.BasicInfo.FirstName));
+
+            CreateMap<PostReaction, PostReactionResponse>()
+                .ForMember(dest => dest.UserFullName, opt => 
+                   opt.MapFrom(src => src.UserProfile.BasicInfo.FirstName + " " + src.UserProfile.BasicInfo.FirstName));
+
+            CreateMap<CommentAnswer, CommentAnswerResponse>()
+                .ForMember(dest => dest.UserFullName, opt =>
+                   opt.MapFrom(src => src.UserProfile.BasicInfo.FirstName + " " + src.UserProfile.BasicInfo.FirstName));
+
+            CreateMap<CommentReaction, CommentReactionResponse>()
+               .ForMember(dest => dest.UserFullName, opt =>
+                  opt.MapFrom(src => src.UserProfile.BasicInfo.FirstName + " " + src.UserProfile.BasicInfo.FirstName));
         }
     }
 }

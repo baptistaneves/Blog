@@ -15,8 +15,8 @@ namespace Blog.Domain.Aggregates.UserProfileAggregate
         public IEnumerable<Post> Posts { get; private set; }
         public IEnumerable<PostComment> PostComments { get; private set; }
         public IEnumerable<PostReaction> PostReactions { get; private set; }
-        public IEnumerable<PostCommentResponse> PostCommentResponses { get; private set; }
-        public IEnumerable<PostCommentReaction> PostCommentReactions { get; private set; }
+        public IEnumerable<CommentAnswer> PostCommentResponses { get; private set; }
+        public IEnumerable<CommentReaction> PostCommentReactions { get; private set; }
 
         private UserProfile()  { }
 

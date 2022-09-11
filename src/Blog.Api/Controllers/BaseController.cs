@@ -6,29 +6,48 @@ namespace Blog.Api.Controllers
 {
 
     [ApiController]
-    public class BaseController : ControllerBase
+    public abstract class BaseController : ControllerBase
     {
+        private readonly ErrorResponse _errorResponse;
+        public BaseController()
+        {
+            _errorResponse = new ErrorResponse();
+        }
+
         protected ActionResult HandleErrorResponse(List<Error> errors)
         {
-            var errorResponse =  new ErrorResponse();
-            errorResponse.TimeStamp = DateTime.Now;
+            _errorResponse.TimeStamp = DateTime.Now;
 
             if(errors.Any(e => e.Code == ErrorCode.NotFound))
             {
                 var error = errors.FirstOrDefault(e=> e.Code == ErrorCode.NotFound);
 
-                errorResponse.StatusCode = 404;
-                errorResponse.StatusPhrase = "Not Found";
-                errorResponse.Errors.Add(error.Message);
+                _errorResponse.StatusCode = 404;
+                _errorResponse.StatusPhrase = "Not Found";
+                _errorResponse.Errors.Add(error.Message);
 
-                return NotFound(errorResponse);
+                return NotFound(_errorResponse);
             }
 
-            errorResponse.StatusCode = 400;
-            errorResponse.StatusPhrase = "Bad Request";
-            errors.ForEach(e=> errorResponse.Errors.Add(e.Message));
+            _errorResponse.StatusCode = 400;
+            _errorResponse.StatusPhrase = "Bad Request";
+            errors.ForEach(e=> _errorResponse.Errors.Add(e.Message));
 
-            return BadRequest(errorResponse);
+            return BadRequest(_errorResponse);
+        }
+
+        protected ActionResult HandleErrorResponse()
+        {
+            _errorResponse.TimeStamp = DateTime.Now;
+            _errorResponse.StatusCode = 400;
+            _errorResponse.StatusPhrase = "Bad Request";
+
+            return BadRequest(_errorResponse);
+        }
+
+        protected void AddError(string errorMessage)
+        {
+            _errorResponse.Errors.Add(errorMessage);
         }
     }
 }

@@ -4,6 +4,7 @@ using Blog.Dal.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Dal.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220911231140_TablesRenamed")]
+    partial class TablesRenamed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace Blog.Dal.Migrations
 
                     b.HasIndex("UserProfileId");
 
-                    b.ToTable("CommentAnswers", (string)null);
+                    b.ToTable("CommentResponses", (string)null);
                 });
 
             modelBuilder.Entity("Blog.Domain.Aggregates.PostAggregate.CommentReaction", b =>
@@ -519,23 +521,19 @@ namespace Blog.Dal.Migrations
 
                             b1.Property<string>("EmailAddress")
                                 .IsRequired()
-                                .HasColumnType("varchar(255)")
-                                .HasColumnName("EmailAddress");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("FirstName")
                                 .IsRequired()
-                                .HasColumnType("varchar(100)")
-                                .HasColumnName("FirstName");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("LastName")
                                 .IsRequired()
-                                .HasColumnType("varchar(100)")
-                                .HasColumnName("LastName");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Phone")
                                 .IsRequired()
-                                .HasColumnType("varchar(50)")
-                                .HasColumnName("Phone");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UserProfileId");
 

@@ -2,11 +2,11 @@
 
 namespace Blog.Domain.Aggregates.PostAggregate
 {
-    public class PostCommentReaction
+    public class CommentReaction
     {
-        private PostCommentReaction() { }
+        private CommentReaction() { }
 
-        public Guid PostCommentReactionId { get; private set; }
+        public Guid CommentReactionId { get; private set; }
         public Guid PostCommentId { get; private set; }
         public Guid UserProfileId { get; private set; }
         public ReactionType ReactionType { get; private set; }
@@ -21,11 +21,11 @@ namespace Blog.Domain.Aggregates.PostAggregate
         /// <param name="userProfileId">User profile Id</param>
         /// <param name="commentId">Comment Id</param>
         /// <param name="reactionType">Reaction type</param>
-        /// <returns see cref="PostCommentReaction"></returns>
-        public static PostCommentReaction CreateCommentReaction(Guid userProfileId, Guid commentId, 
+        /// <returns see cref="CommentReaction"></returns>
+        public static CommentReaction CreateCommentReaction(Guid userProfileId, Guid commentId, 
             ReactionType reactionType)
         {
-            return new PostCommentReaction
+            return new CommentReaction
             {
                 UserProfileId = userProfileId,
                 PostCommentId = commentId,
