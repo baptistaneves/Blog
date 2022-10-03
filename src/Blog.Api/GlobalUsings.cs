@@ -10,3 +10,4 @@ global using Blog.Api.Filters;
 global using MediatR;
 global using AutoMapper;
 global using Microsoft.AspNetCore.Authorization;
+global using Blog.Api.Middleware;

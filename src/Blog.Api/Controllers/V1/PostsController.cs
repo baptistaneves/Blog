@@ -1,5 +1,6 @@
 ﻿using Blog.Api.Contracts.Posts.Requests;
 using Blog.Api.Contracts.Posts.Responses;
+using Blog.Application.Models;
 using Blog.Application.Posts.Commands;
 using Blog.Application.Posts.Queries;
 
@@ -20,11 +21,29 @@ namespace Blog.Api.Controllers.V1
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPosts(CancellationToken token)
+        public async Task<IActionResult> GetAllPosts([FromQuery] PaginationParams @params, CancellationToken token)
         {
-            var query = new GetAllPostsQuery();
+            var query = new GetAllPostsQuery { Params = @params };
             var result = await _mediator.Send(query, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);
+
+            Response.AddPaginationHeader(result.Payload.CurrentPage, result.Payload.PageSize,
+                result.Payload.TotalCount, result.Payload.TotalPages);
+
+            return Ok(result.Payload);
+        }
+
+        [HttpGet, Route(ApiRoutes.Post.GetPostsByCategoryId)]
+        [ValidateGuid("categoryId")]
+        public async Task<IActionResult> GetPostsByCategory(string categoryId, [FromQuery] PaginationParams @params, CancellationToken token)
+        {
+            var query = new GetPostsByCategoryQuery { Params = @params, CategoryId = Guid.Parse(categoryId) };
+
+            var result = await _mediator.Send(query, token);
+            if (result.IsError) return HandleErrorResponse(result.Errors);
+
+            Response.AddPaginationHeader(result.Payload.CurrentPage, result.Payload.PageSize,
+                result.Payload.TotalCount, result.Payload.TotalPages);
 
             return Ok(result.Payload);
         }
@@ -44,7 +63,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpPost, Route(ApiRoutes.Post.CreatePost)]
         [ValidateModel]
-        public async Task<IActionResult> CreatePost([FromBody] CreatePost newPost, CancellationToken token)
+        public async Task<IActionResult> CreatePost([FromForm] CreatePost newPost, CancellationToken token)
         {
             var prefix = Guid.NewGuid() + "_";
             if (!await UploadFile(newPost.Image, prefix)) return HandleErrorResponse();
@@ -64,7 +83,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPatch, Route(ApiRoutes.Post.UpdatePost)]
         [ValidateGuid("postId")]
         [ValidateModel]
-        public async Task<IActionResult> UpdatePost([FromBody] UpdatePost updatedPost, string postId, CancellationToken token)
+        public async Task<IActionResult> UpdatePost([FromForm] UpdatePost updatedPost, string postId, CancellationToken token)
         {
             var command = _mapper.Map<UpdatePostCommand>(updatedPost);
             command.PostId = Guid.Parse(postId);
@@ -92,12 +111,14 @@ namespace Blog.Api.Controllers.V1
         [HttpDelete, Route(ApiRoutes.Post.RemovePost)]
         [ValidateGuid("postId")]
         public async Task<IActionResult> RemovePost(string postId, CancellationToken token)
-        {
+        { 
             var postIdGuid = Guid.Parse(postId);
             var command = new RemovePostByIdCommand { PostId = postIdGuid };
 
             var result = await _mediator.Send(command, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);
+
+            DeleteFile(result.Payload.Image);
 
             return NoContent();
         }
@@ -145,11 +166,12 @@ namespace Blog.Api.Controllers.V1
             var result = await _mediator.Send(command, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);
 
-            return Ok(result.Payload);
+            return Ok(_mapper.Map<PostCommentResponse>(result.Payload));
         }
 
         [HttpPut, Route(ApiRoutes.Post.UpdateComment)]
         [ValidateGuid("postId", "commentId")]
+        [ValidateModel]
         public async Task<IActionResult> UpdatePostComment(string postId, string commentId,
             [FromBody] CreateUpdatePostComment updatedComment, CancellationToken token)
         {
@@ -216,8 +238,8 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemovePostReaction)]
         [ValidateGuid("postId", "reactionId")]
-        public async Task<IActionResult> AddPostReaction(string postId, string reactionId,
-            [FromBody] CreatePostReaction reaction, CancellationToken token)
+        public async Task<IActionResult> RemovePostReaction(string postId, string reactionId,
+            CancellationToken token)
         {
             var command = new RemovePostReactionCommand
             {
@@ -283,7 +305,7 @@ namespace Blog.Api.Controllers.V1
             var result = await _mediator.Send(command, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);
 
-            return Ok(result.Payload);
+            return Ok(_mapper.Map<CommentAnswerResponse>(result.Payload));
         }
 
         [HttpPut, Route(ApiRoutes.Post.UpdateCommentAnswer)]
@@ -357,7 +379,7 @@ namespace Blog.Api.Controllers.V1
             var result = await _mediator.Send(command, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);
 
-            return Ok(result.Payload);
+            return Ok(_mapper.Map<CommentReactionResponse>(result.Payload));
         }
 
         [HttpDelete, Route(ApiRoutes.Post.RemoveCommentReaction)]
@@ -404,8 +426,6 @@ namespace Blog.Api.Controllers.V1
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/" + file);
 
             if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-
-            AddError("A imagem não foi encontrada!");
         }
     }
 }

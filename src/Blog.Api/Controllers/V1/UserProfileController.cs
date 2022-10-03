@@ -19,7 +19,7 @@ namespace Blog.Api.Controllers.V1
         }
 
         [Authorize(Roles = "Admin,Editor")]
-        [HttpGet, Route(ApiRoutes.UserProfile.GetAllRegisteredUserProfiles)]
+        [HttpGet, Route(ApiRoutes.UserProfile.GetPublicUserProfiles)]
         public async Task<IActionResult> GetAllRegisteredUserProfiles(CancellationToken token)
         {
             var query = new GetAllResgisteredUserProfilesQuery();
@@ -30,7 +30,7 @@ namespace Blog.Api.Controllers.V1
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet, Route(ApiRoutes.UserProfile.GetAllAdminUserProfiles)]
+        [HttpGet, Route(ApiRoutes.UserProfile.GetAdminUserProfiles)]
         public async Task<IActionResult> GetAllAdminUserProfiles(CancellationToken token)
         {
             var currentUserProfileId = HttpContext.GetUserProfileIdCliamValue();

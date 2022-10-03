@@ -49,6 +49,7 @@ namespace Blog.Application.Posts.CommandHandlers
                 }
 
                 postComment.RemoveCommentAnswer(commentAnswer);
+                _context.CommentAnswers.Remove(commentAnswer);
 
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync(cancellationToken);

@@ -49,5 +49,10 @@ namespace Blog.Api.Controllers
         {
             _errorResponse.Errors.Add(errorMessage);
         }
+
+        protected bool HasErrorResponse()
+        {
+            return _errorResponse.Errors.Any();
+        }
     }
 }

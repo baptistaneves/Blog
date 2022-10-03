@@ -24,7 +24,7 @@ namespace Blog.Application.Posts.CommandHandlers
             try
             {
                 var post = await _context.Posts.AsNoTracking()
-                    .Include(pc => pc.Comments)
+                    .Include(p => p.Comments)
                     .FirstOrDefaultAsync(p => p.PostId == request.PostId, cancellationToken);
 
                 if (post is null)
@@ -33,7 +33,7 @@ namespace Blog.Application.Posts.CommandHandlers
                     return _result;
                 }
 
-                var postComment = post.Comments.FirstOrDefault(pc => pc.PostCommentId == request.PostCommentId);
+                var postComment = post.Comments.FirstOrDefault(c => c.PostCommentId == request.PostCommentId);
                 if (postComment is null)
                 {
                     _result.AddError(ErrorCode.NotFound, PostErrorMessages.PostCommentNotFound);
@@ -41,9 +41,10 @@ namespace Blog.Application.Posts.CommandHandlers
                 }
 
                 post.RemovePostComment(postComment);
+                _context.PostComments.Remove(postComment);
 
                 _context.Posts.Update(post);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
 
                 _result.Payload = true;
             }

@@ -4,7 +4,8 @@ using MediatR;
 
 namespace Blog.Application.Posts.Queries
 {
-    public class GetAllPostsQuery : IRequest<OperationResult<IEnumerable<PostDto>>> 
-    { 
+    public class GetAllPostsQuery : IRequest<OperationResult<PagedList<PostDto>>> 
+    {
+        public PaginationParams Params { get; set; }
     }
 }

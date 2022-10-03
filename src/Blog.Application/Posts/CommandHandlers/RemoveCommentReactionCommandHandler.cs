@@ -49,6 +49,7 @@ namespace Blog.Application.Posts.CommandHandlers
                 }
 
                 postComment.RemoveCommentReaction(commentReaction);
+                _context.CommentReactions.Remove(commentReaction);
 
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync(cancellationToken);

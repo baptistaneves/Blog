@@ -1,0 +1,52 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <h1>Usuários</h1>
+        </div>
+        <div class="col-sm-6">
+          <h3 class="card-title d-flex justify-content-end w-100"><a href="#" class="btn btn-secondary" style="text-transform:capitalize;" data-toggle="modal" data-target="#Add"><i class="fa fa-plus"></i> Novo usuário</a></h3>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <div class="container-fluid">
+  <!-- /.card -->
+  <div class="card">
+    <div class="card-body">
+      <table *ngIf="users != null" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Perfil</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{user.basicInfo.firstName}} {{user.basicInfo.lastName}}</td>
+          <td>{{user.basicInfo.emailAddress}}</td>
+          <td>{{user.basicInfo.phone}}</td>
+          <td>{{user.role}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Perfil</th>
+        </tr>
+        </tfoot>
+      </table>
+      <div *ngIf="users == null" class="alert alert-danger">
+        <p>Não existem usários cadastrados!</p>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>

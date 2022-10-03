@@ -2,6 +2,7 @@
 {
     public class PostCommentResponse
     {
+        public Guid PostId { get; set; }
         public Guid PostCommentId { get; set; }
         public Guid UserProfileId { get; set; }
         public string UserFullName { get; set; }

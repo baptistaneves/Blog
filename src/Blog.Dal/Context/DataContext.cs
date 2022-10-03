@@ -12,6 +12,10 @@ namespace Blog.Dal.Context
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<PostComment> PostComments { get; set; }
+        public DbSet<PostReaction> PostReactions { get; set; }
+        public DbSet<CommentAnswer> CommentAnswers { get; set; }
+        public DbSet<CommentReaction> CommentReactions { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

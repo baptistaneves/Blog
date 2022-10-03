@@ -7,19 +7,20 @@
 
         public static class Identity
         {
+            public const string GetAllRoles = "obter-tipos-de-usuarios";
             public const string Login = "login";
             public const string Register = "registar-se";
-            public const string RegisterUserAdmin = "novo-usuario";
+            public const string CreateUser = "novo-usuario";
             public const string DeleteAccount = "excluir-minha-conta/{identityUserId}";
-            public const string RemoveUserAccount = "remover-usuario/{identityUserId}";
+            public const string RemoveUser = "remover-usuario/{identityUserId}";
         }
 
         public static class UserProfile
         {
-            public const string GetAllRegisteredUserProfiles = "obter-usuarios-registados";
-            public const string GetAllAdminUserProfiles = "obter-usuarios";
+            public const string GetPublicUserProfiles = "obter-usuarios-publicos";
+            public const string GetAdminUserProfiles = "obter-usuarios-admins";
             public const string GetUserProfileById = "obter-usuario-por-id/{userProfileId}";
-            public const string UpdateUserProfile = "actualizar-perfil-de-usuario-por-id/{userProfileId}";
+            public const string UpdateUserProfile = "actualizar-usuario/{userProfileId}";
         }
 
         public static class Category
@@ -32,6 +33,8 @@
 
         public static class Post
         {
+
+            public const string GetPostsByCategoryId = "obter-noticias-por-categoria/{categoryId}";
             public const string GetPostById = "obter-noticia-por-id/{postId}";
             public const string CreatePost = "nova-noticia";
             public const string RemovePost = "remover-noticia/{postId}";

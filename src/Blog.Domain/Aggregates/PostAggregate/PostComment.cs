@@ -65,7 +65,7 @@ namespace Blog.Domain.Aggregates.PostAggregate
         /// <exception cref="PostCommentNotValidException"></exception>
         public void UpdatePostComment(string updatedComment)
         {
-            if(!string.IsNullOrWhiteSpace(updatedComment))
+            if(string.IsNullOrWhiteSpace(updatedComment))
             {
                 var exception = new PostCommentNotValidException("Erro ao actualizar comentário de notícia");
 

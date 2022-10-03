@@ -30,6 +30,7 @@ namespace Blog.Application.Posts.CommandHandlers
             try
             {
                 var post = await _context.Posts.AsNoTracking()
+                    .Include(p => p.Comments)
                     .FirstOrDefaultAsync(p => p.PostId == request.PostId, cancellationToken);
 
                 if (post is null)
@@ -49,7 +50,6 @@ namespace Blog.Application.Posts.CommandHandlers
                     .CreateCommentReaction(request.UserProfileId, request.PostCommentId, request.ReactionType);
 
                 postComment.AddReactionComment(commentReaction);
-                post.AddPostComment(postComment);
 
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync(cancellationToken);

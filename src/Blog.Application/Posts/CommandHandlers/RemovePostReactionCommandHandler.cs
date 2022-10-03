@@ -4,11 +4,6 @@ using Blog.Application.Posts.Commands;
 using Blog.Dal.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blog.Application.Posts.CommandHandlers
 {
@@ -29,7 +24,7 @@ namespace Blog.Application.Posts.CommandHandlers
             try
             {
                 var post = await _context.Posts.AsNoTracking()
-                    .Include(pc => pc.Comments)
+                    .Include(pc => pc.Reactions)
                     .FirstOrDefaultAsync(p => p.PostId == request.PostId, cancellationToken);
 
                 if (post is null)
@@ -46,6 +41,7 @@ namespace Blog.Application.Posts.CommandHandlers
                 }
 
                 post.RemovePostReaction(postReaction);
+                _context.PostReactions.Remove(postReaction);
 
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync(cancellationToken);

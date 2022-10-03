@@ -26,6 +26,7 @@ namespace Blog.Application.Posts.CommandHandlers
             try
             {
                 var post = await _context.Posts.AsNoTracking()
+                    .Include(c=> c.Comments)
                     .FirstOrDefaultAsync(p => p.PostId == request.PostId, cancellationToken);
 
                 if (post is null)
@@ -44,7 +45,6 @@ namespace Blog.Application.Posts.CommandHandlers
                 var commentAnswer = CommentAnswer.CreateCommentAnswer(request.UserProfileId, request.CommentId, request.Text);
                 
                 postComment.AddCommetAnswer(commentAnswer);
-                post.AddPostComment(postComment);
 
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync(cancellationToken);

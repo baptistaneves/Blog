@@ -1,6 +1,7 @@
 ﻿using Blog.Api.Contracts.Identity.Request;
 using Blog.Api.Contracts.Identity.Response;
 using Blog.Application.Identity.Commands;
+using Blog.Application.Identity.Queries;
 
 namespace Blog.Api.Controllers.V1
 {
@@ -14,6 +15,18 @@ namespace Blog.Api.Controllers.V1
         {
             _mediator = mediator;
             _mapper = mapper;
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet, Route(ApiRoutes.Identity.GetAllRoles)]
+        public async Task<IActionResult> GetAllRoles(CancellationToken token)
+        {
+            var query = new GetAllRolesQuery();
+
+            var result = await _mediator.Send(query, token);
+            if (result.IsError) return HandleErrorResponse(result.Errors);
+
+            return Ok(result.Payload);
         }
 
         [HttpPost, Route(ApiRoutes.Identity.Register)]
@@ -31,7 +44,7 @@ namespace Blog.Api.Controllers.V1
             return Ok(mapped);
         }
 
-        [HttpPost, Route(ApiRoutes.Identity.RegisterUserAdmin)]
+        [HttpPost, Route(ApiRoutes.Identity.CreateUser)]
         [ValidateModel]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest registration, 
             CancellationToken token)
@@ -74,7 +87,7 @@ namespace Blog.Api.Controllers.V1
             return NoContent();
         }
 
-        [HttpDelete, Route(ApiRoutes.Identity.RemoveUserAccount)]
+        [HttpDelete, Route(ApiRoutes.Identity.RemoveUser)]
         [Authorize(Roles = "Admin")]
         [ValidateGuid("identityUserId")]
         public async Task<IActionResult> RemoveUserAccount(string identityUserId, CancellationToken token)

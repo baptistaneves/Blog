@@ -2,22 +2,23 @@
 using Blog.Application.Models;
 using Blog.Application.Posts.Commands;
 using Blog.Dal.Context;
+using Blog.Domain.Aggregates.PostAggregate;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Application.Posts.CommandHandlers
 {
-    public class RemovePostByIdCommandHandler : IRequestHandler<RemovePostByIdCommand, OperationResult<bool>>
+    public class RemovePostByIdCommandHandler : IRequestHandler<RemovePostByIdCommand, OperationResult<Post>>
     {
         private readonly DataContext _context;
-        private readonly OperationResult<bool> _result;
+        private readonly OperationResult<Post> _result;
         public RemovePostByIdCommandHandler(DataContext context)
         {
             _context = context;
-            _result = new OperationResult<bool>();
+            _result = new OperationResult<Post>();
         }
 
-        public async Task<OperationResult<bool>> Handle(RemovePostByIdCommand request, 
+        public async Task<OperationResult<Post>> Handle(RemovePostByIdCommand request, 
             CancellationToken cancellationToken)
         {
             try
@@ -34,7 +35,7 @@ namespace Blog.Application.Posts.CommandHandlers
                 _context.Posts.Remove(post);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                _result.Payload = true;
+                _result.Payload = post;
             }
             catch (Exception ex)
             {

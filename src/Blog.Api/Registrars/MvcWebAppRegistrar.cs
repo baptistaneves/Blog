@@ -4,6 +4,8 @@
     {
         public void RegisterServices(WebApplication app)
         {
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
@@ -17,6 +19,13 @@
             });
 
             app.UseHttpsRedirection();
+
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+                policy.WithOrigins("http://localhost:4200");
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();
