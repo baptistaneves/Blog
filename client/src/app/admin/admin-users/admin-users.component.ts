@@ -1,9 +1,10 @@
-import { UserRole } from './../../shared/models/user/userRole';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserApiService } from './../../data/user/user-api.service';
 import { Component, OnInit } from '@angular/core';
-import { UserProfile } from 'src/app/shared/models/user/userProfile';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { UserRole } from './../../shared/models/user/userRole';
+import { UserApiService } from './../../data/user/user-api.service';
+import { UserProfile } from 'src/app/shared/models/user/userProfile';
 import { Modal } from 'src/app/shared/common/modal';
 
 @Component({
