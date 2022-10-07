@@ -26,7 +26,7 @@ export class UserApiService {
     return this.http.get<UserProfile[]>(this.baseUrl + "userProfile/obter-usuarios-publicos")
   }
 
-  getRolesUser(): Observable<UserRole[]> {
+  getUserRoles(): Observable<UserRole[]> {
     return this.http.get<UserRole[]>(this.baseUrl + "identity/obter-tipos-de-usuarios")
   }
 
@@ -39,11 +39,11 @@ export class UserApiService {
   }
 
   createPublicUser(user: CreatePublicUser): Observable<User> {
-    return this.http.post<User>(this.baseUrl + "identity/novo-usuario", user);
+    return this.http.post<User>(this.baseUrl + "identity/registar-se", user);
   }
 
-  updateUserProfile(userId:string, userUpdated: UpdateUserProfile): Observable<any> {
-    return this.http.patch<any>(this.baseUrl + "userProfile/actualizar-usuario/" + userId, userUpdated);
+  updateUserProfile(identityId:string, userUpdated: UpdateUserProfile): Observable<any> {
+    return this.http.patch<any>(this.baseUrl + "userProfile/actualizar-usuario/" + identityId, userUpdated);
   }
 
   removeUser(userId: string): Observable<any> {

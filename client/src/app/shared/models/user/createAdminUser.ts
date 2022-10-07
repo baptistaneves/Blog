@@ -4,4 +4,5 @@ export interface CreateAdminUser {
     emailAddress:string;
     role:string;
     phone:string;
+    password:string;
 }

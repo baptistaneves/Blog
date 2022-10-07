@@ -23,6 +23,7 @@
           <th>E-mail</th>
           <th>Telefone</th>
           <th>Perfil</th>
+          <th></th>
         </tr>
         </thead>
         <tbody>
@@ -31,6 +32,10 @@
           <td>{{user.basicInfo.emailAddress}}</td>
           <td>{{user.basicInfo.phone}}</td>
           <td>{{user.role}}</td>
+          <td>
+            <a href="#" class="btn btn-sm btn-primary" (click)="fillFields(user)"  data-toggle="modal" data-target="#Update"><i class="fa fa-edit"></i></a>
+            <a class="btn btn-sm btn-danger ml-1" (click)="remove(user.identityId)"><i class="fa fa-trash"></i></a>
+          </td>
         </tr>
         </tbody>
         <tfoot>
@@ -39,6 +44,7 @@
           <th>E-mail</th>
           <th>Telefone</th>
           <th>Perfil</th>
+          <th></th>
         </tr>
         </tfoot>
       </table>
@@ -49,4 +55,117 @@
     <!-- /.card-body -->
   </div>
   <!-- /.card -->
+</div>
+
+<!--Modal To Add-->
+<div class="modal" id="Add">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userAddForm" (ngSubmit)="create()">
+          <div class="card-body">
+            <div class="form-group">
+              <input type="text" formControlName="firstName" class="form-control" placeholder="Primeiro Nome">
+              <div *ngIf="f.firstName.errors && f.firstName.touched" class="text-danger">
+                <div *ngIf="f.firstName.errors.required">Informe o primeiro nome</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" formControlName="lastName" class="form-control" placeholder="Último Nome">
+              <div *ngIf="f.lastName.errors && f.lastName.touched" class="text-danger">
+                <div *ngIf="f.lastName.errors.required">Informe o último nome</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" formControlName="phone" class="form-control" placeholder="Telefone">
+              <div *ngIf="f.phone.errors && f.phone.touched" class="text-danger">
+                <div *ngIf="f.phone.errors.required">Informe o telefone</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="email" formControlName="emailAddress" class="form-control" placeholder="E-mail">
+              <div *ngIf="f.emailAddress.errors && f.emailAddress.touched" class="text-danger">
+                <div *ngIf="f.emailAddress.errors.required">Informe o e-mail</div>
+                <div *ngIf="f.emailAddress.errors.emailAddress">O e-mail é inválido</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="password" formControlName="password" class="form-control" placeholder="Senha">
+              <div *ngIf="f.password.errors && f.password.touched" class="text-danger">
+                <div *ngIf="f.password.errors.required">Informe a senha</div>
+                <div *ngIf="f.password.errors.minlength">A senha deve ter no minimo 6 caracteres</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <select class="custom-select form-control" formControlName="role">
+                <option selected disabled>--Selecione o perfil--</option>
+                <option *ngFor="let role of roles" [value]="role.name">{{role.name}}</option>
+              </select>
+              <div *ngIf="f.role.errors && f.role.touched" class="text-danger">
+                <div *ngIf="f.role.errors.required">Selecione o perfil</div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer w-100 d-flex justify-content-end">
+            <button type="button" id="bntClose" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            <button type="submit" [disabled]="userAddForm.invalid" class="btn btn-primary ml-2">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal To Edit-->
+<div class="modal" id="Update">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userUpdateForm" (ngSubmit)="update()">
+          <div class="card-body">
+            <div class="form-group">
+              <input type="text" formControlName="firstName" class="form-control" placeholder="Primeiro Nome">
+              <div *ngIf="fu.firstName.errors && fu.firstName.touched" class="text-danger">
+                <div *ngIf="fu.firstName.errors.required">Informe o primeiro nome</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" formControlName="lastName" class="form-control" placeholder="Último Nome">
+              <div *ngIf="fu.lastName.errors && fu.lastName.touched" class="text-danger">
+                <div *ngIf="fu.lastName.errors.required">Informe o último nome</div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <input type="email" formControlName="emailAddress" class="form-control" placeholder="E-mail">
+              <div *ngIf="fu.emailAddress.errors && fu.emailAddress.touched" class="text-danger">
+                <div *ngIf="fu.emailAddress.errors.required">Informe o e-mail</div>
+                <div *ngIf="fu.emailAddress.errors.emailAddress">O e-mail é inválido</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" formControlName="phone" class="form-control" placeholder="Telefone">
+              <div *ngIf="fu.phone.errors && fu.phone.touched" class="text-danger">
+                <div *ngIf="fu.phone.errors.required">Informe o telefone</div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer w-100 d-flex justify-content-end">
+            <button type="button" id="bntEditClose" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            <button type="submit" [disabled]="userUpdateForm.invalid" class="btn btn-primary ml-2">Atualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
