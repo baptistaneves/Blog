@@ -19,6 +19,7 @@
         UnathorizedAccountRemoval = 305,
         CategoryRemovalNotAuthorized = 306,
         CategoryAlreadyExists = 307,
-        PostTitleAlreadyExists = 308
+        CategoryHasPosts = 308,
+        PostTitleAlreadyExists = 309
     }
 }

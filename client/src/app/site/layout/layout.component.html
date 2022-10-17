@@ -12,13 +12,10 @@
             <a class="nav-link" [routerLink]="['/']">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/sobre']">Sobre</a>
+            <a class="nav-link" [routerLink]="['/registar-se']">Registar-se</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/contacto']">Contacto</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/login']"><i class="fa fa-user-lock mr-2"></i>Entrar</a>
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#login"><i class="fa fa-user-lock mr-2"></i>Entrar</a>
           </li>
         </ul>
       </div>
@@ -63,3 +60,44 @@
       </div>
     </div>
   </footer>
+
+  <!--Modal Login-->
+  <div class="modal" id="login">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Login</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <ul *ngIf="errors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of errors">{{error}}</li></ul>
+
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>E-mail</label>
+                <input type="email" class="form-control" placeholder="E-mail" formControlName="userName">
+                <div *ngIf="f.userName.errors && f.userName.touched" class="help-block text-danger">
+                  <p *ngIf="f.userName.errors.required">Informe o e-mail</p>
+                </div>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Senha</label>
+                <input type="password" class="form-control" placeholder="Senha" formControlName="password">
+                <div *ngIf="f.password.errors && f.password.touched" class="help-block text-danger">
+                  <p *ngIf="f.password.errors.required">Informe a senha</p>
+                </div>
+              </div>
+            </div>
+            <br>
+            <button type="button" id="bntClose" class="btn btn-default mr-2" data-dismiss="modal">Fechar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

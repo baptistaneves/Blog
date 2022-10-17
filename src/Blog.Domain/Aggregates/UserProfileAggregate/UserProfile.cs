@@ -42,14 +42,10 @@ namespace Blog.Domain.Aggregates.UserProfileAggregate
         /// Update basic information
         /// </summary>
         /// <param name="newInfo">Basic information</param>
-        /// <returns see cref="UserProfile></returns>
-        public UserProfile UpdateBasicInfo(BasicInfo newInfo)
+        public void UpdateBasicInfo(BasicInfo newInfo)
         {
-            return new UserProfile
-            {
-                BasicInfo = newInfo,
-                LastModified = DateTime.UtcNow
-            };
+            BasicInfo = newInfo;
+            LastModified = DateTime.UtcNow;
         }
     }
 }

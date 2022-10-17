@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class AdminLoginComponent implements OnInit {
   loginForm: FormGroup;
+  errors: string[] = [];
 
   constructor(private autService:AuthService,
               private formBuilder:FormBuilder,
@@ -31,9 +32,7 @@ export class AdminLoginComponent implements OnInit {
   login() {
     this.autService.login(this.loginForm.value).subscribe(resp => {
       if(resp) this.route.navigate(['/admin']);
-    }, error => {
-      console.log(error);
-    })
+    }, errors => this.errors = errors)
   }
 
 }

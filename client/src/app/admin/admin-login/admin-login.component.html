@@ -7,12 +7,11 @@
           <div class="card-body">
             <p class="login-box-msg">Faça login para iniciar sessão</p>
       
-            <form [formGroup]="loginForm" (ngSubmit)="login()">    
+            <form [formGroup]="loginForm" (ngSubmit)="login()">   
+              <ul *ngIf="errors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of errors">{{error}}</li></ul>
+ 
               <div class="input-group mb-3">
-                <input type="email" 
-                class="form-control" 
-                placeholder="E-mail"
-                formControlName="userName"/>
+                <input type="email" class="form-control"  placeholder="E-mail" formControlName="userName"/>
                 <div class="input-group-append">
                   <div class="input-group-text">
                     <span class="fas fa-envelope"></span>
@@ -24,10 +23,7 @@
                 <div *ngIf="f.userName.errors.userName">Email inváldo</div>
               </div>
               <div class="input-group mb-3">
-                <input type="password" 
-                class="form-control" 
-                placeholder="Palavra-passe"
-                formControlName="password"/>
+                <input type="password" class="form-control" placeholder="Palavra-passe" formControlName="password"/>
                 <div class="input-group-append">
                   <div class="input-group-text">
                     <span class="fas fa-lock"></span>
@@ -35,7 +31,7 @@
                 </div>
               </div>
               <div *ngIf="f.password.errors && f.password.touched" class="text-danger">
-                <div **ngIf="f.password.errors.required">Informa a senha</div>
+                <div *ngIf="f.password.errors.required">Informa a senha</div>
               </div>
               <div class="row">
                 <div class="col-4">

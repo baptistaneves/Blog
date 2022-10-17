@@ -17,6 +17,19 @@ namespace Blog.Api.Controllers.V1
             _mapper = mapper;
         }
 
+        [HttpGet, Route(ApiRoutes.Identity.GetCurrentUser)]
+        public async Task<IActionResult> GetCurrentUser(CancellationToken token)
+        {
+            var query = new GetCurrentUserQuery { IdentityId = HttpContext.GetIdentityIdClaimValue() };
+
+            var result = await _mediator.Send(query, token);
+            if(result.IsError) return HandleErrorResponse(result.Errors);
+
+            var mapped = _mapper.Map<IdentityUserProfileResponse>(result.Payload);
+
+            return Ok(mapped);
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpGet, Route(ApiRoutes.Identity.GetAllRoles)]
         public async Task<IActionResult> GetAllRoles(CancellationToken token)
@@ -46,6 +59,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpPost, Route(ApiRoutes.Identity.CreateUser)]
         [ValidateModel]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest registration, 
             CancellationToken token)
         {
@@ -69,8 +83,19 @@ namespace Blog.Api.Controllers.V1
             return Ok(_mapper.Map<IdentityUserProfileResponse>(result.Payload));
         }
 
+        [HttpGet, Route(ApiRoutes.Identity.Logout)]
+        public async Task<IActionResult> Logout(CancellationToken token)
+        {
+            var command = new LogoutCommand();
+
+            var result = await _mediator.Send(command, token);
+            if (result.IsError) return HandleErrorResponse(result.Errors);
+
+            return NoContent();
+        }
+
         [HttpDelete, Route(ApiRoutes.Identity.DeleteAccount)]
-        [Authorize(Roles = "Admin,Editor,User")]
+        [Authorize(Roles = "Admin,User")]
         [ValidateGuid("identityUserId")]
         public async Task<IActionResult> DeleteAccount(string identityUserId, CancellationToken token)
         {

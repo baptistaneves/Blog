@@ -8,16 +8,17 @@ namespace Blog.Api.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    [Authorize(Roles = "Admin, Editor")]
     public class PostsController : BaseController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _env;
 
-        public PostsController(IMapper mapper, IMediator mediator)
+        public PostsController(IMapper mapper, IMediator mediator, IWebHostEnvironment env)
         {
             _mapper = mapper;
             _mediator = mediator;
+            _env = env;
         }
 
         [HttpGet]
@@ -35,6 +36,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetPostsByCategoryId)]
         [ValidateGuid("categoryId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetPostsByCategory(string categoryId, [FromQuery] PaginationParams @params, CancellationToken token)
         {
             var query = new GetPostsByCategoryQuery { Params = @params, CategoryId = Guid.Parse(categoryId) };
@@ -63,53 +65,44 @@ namespace Blog.Api.Controllers.V1
 
         [HttpPost, Route(ApiRoutes.Post.CreatePost)]
         [ValidateModel]
-        public async Task<IActionResult> CreatePost([FromForm] CreatePost newPost, CancellationToken token)
+        [Authorize(Roles = "Admin, Editor")]
+        public async Task<IActionResult> CreatePost([FromBody] CreatePost newPost, CancellationToken token)
         {
-            var prefix = Guid.NewGuid() + "_";
-            if (!await UploadFile(newPost.Image, prefix)) return HandleErrorResponse();
-
             var userProfileId = HttpContext.GetUserProfileIdCliamValue();
 
             var command = _mapper.Map<CreatePostCommand>(newPost);
             command.UserProfileId = userProfileId;
-            command.Image = prefix + newPost.Image.FileName;
 
             var result = await _mediator.Send(command, token);
-            if (result.IsError) return HandleErrorResponse(result.Errors);
-
+            if (result.IsError) 
+            {
+                DeleteImage(command.Image);
+                return HandleErrorResponse(result.Errors);
+            }
+            
             return Ok(_mapper.Map<PostResponse>(result.Payload));
         }
 
-        [HttpPatch, Route(ApiRoutes.Post.UpdatePost)]
+        [HttpPut, Route(ApiRoutes.Post.UpdatePost)]
         [ValidateGuid("postId")]
         [ValidateModel]
-        public async Task<IActionResult> UpdatePost([FromForm] UpdatePost updatedPost, string postId, CancellationToken token)
+        [Authorize(Roles = "Admin, Editor")]
+        public async Task<IActionResult> UpdatePost(string postId, [FromBody] UpdatePost updatedPost, CancellationToken token)
         {
             var command = _mapper.Map<UpdatePostCommand>(updatedPost);
             command.PostId = Guid.Parse(postId);
-
-            if (updatedPost.Image != null)
-            {
-                var post = await _mediator.Send(new GetPostByIdQuery { PostId = Guid.Parse(postId) }, token);
-                if (post.IsError) return HandleErrorResponse(post.Errors);
-
-                DeleteFile(post.Payload.Image);
-
-                var prefix = Guid.NewGuid() + "_";
-
-                if (!await UploadFile(updatedPost.Image, prefix)) return HandleErrorResponse();
-
-                command.Image = prefix + updatedPost.Image.FileName;
-            }
             
             var result = await _mediator.Send(command, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);
+
+            DeleteImage(result.Payload);
 
             return NoContent();
         }
 
         [HttpDelete, Route(ApiRoutes.Post.RemovePost)]
         [ValidateGuid("postId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> RemovePost(string postId, CancellationToken token)
         { 
             var postIdGuid = Guid.Parse(postId);
@@ -118,13 +111,14 @@ namespace Blog.Api.Controllers.V1
             var result = await _mediator.Send(command, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);
 
-            DeleteFile(result.Payload.Image);
+            DeleteImage(result.Payload.Image);
 
             return NoContent();
         }
 
         [HttpGet, Route(ApiRoutes.Post.GetAllPostComments)]
         [ValidateGuid("postId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllPostComments(string postId, CancellationToken token)
         {
             var query = new GetAllPostCommentsQuery { PostId = Guid.Parse(postId) };
@@ -137,6 +131,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetCommentById)]
         [ValidateGuid("postId", "commentId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetCommentById(string postId, string commentId, CancellationToken token)
         {
             var query = new GetPostCommentByIdQuery
@@ -153,6 +148,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPost, Route(ApiRoutes.Post.AddPostComment)]
         [ValidateGuid("postId")]
         [ValidateModel]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> AddPostComment(string postId, [FromBody] CreateUpdatePostComment newComment,
             CancellationToken token)
         {
@@ -172,6 +168,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPut, Route(ApiRoutes.Post.UpdateComment)]
         [ValidateGuid("postId", "commentId")]
         [ValidateModel]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> UpdatePostComment(string postId, string commentId,
             [FromBody] CreateUpdatePostComment updatedComment, CancellationToken token)
         {
@@ -190,6 +187,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemovePostComment)]
         [ValidateGuid("postId", "commentId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> RemovePostComment(string postId, string commentId,
             CancellationToken token)
         {
@@ -208,6 +206,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetAllPostReactions)]
         [ValidateGuid("postId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllPostReactions(string postId, CancellationToken token)
         {
             var query = new GetAllPostReactionsQuery { PostId = Guid.Parse(postId) };
@@ -220,6 +219,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpPost, Route(ApiRoutes.Post.AddPostReaction)]
         [ValidateGuid("postId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> AddPostReaction(string postId, [FromBody] CreatePostReaction reaction,
             CancellationToken token)
         {
@@ -238,6 +238,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemovePostReaction)]
         [ValidateGuid("postId", "reactionId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> RemovePostReaction(string postId, string reactionId,
             CancellationToken token)
         {
@@ -255,6 +256,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetAllCommentAnswers)]
         [ValidateGuid("postId", "commentId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllCommentAnswers(string postId, string commentId,
             CancellationToken token)
         {
@@ -272,6 +274,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetCommentAnswerById)]
         [ValidateGuid("postId", "commentId", "commentAnswerId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetCommentAnswerById(string postId, string commentId,
             string commentAnswerId, CancellationToken token)
         {
@@ -291,6 +294,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPost, Route(ApiRoutes.Post.AddCommentAnswer)]
         [ValidateGuid("postId", "commentId")]
         [ValidateModel]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> AddCommentAnswer(string postId, string commentId,
             [FromBody] CreateUpdateCommentAnswer newAnswer, CancellationToken token)
         {
@@ -311,6 +315,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPut, Route(ApiRoutes.Post.UpdateCommentAnswer)]
         [ValidateGuid("postId", "commentId", "commentAnswerId")]
         [ValidateModel]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> UpdateCommentAnswer(string postId, string commentId,
             string commentAnswerId, [FromBody] CreateUpdateCommentAnswer answerUpdated, CancellationToken token)
         {
@@ -330,6 +335,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemoveCommentAnswer)]
         [ValidateGuid("postId", "commentId", "commentAnswerId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> RemoveCommentAnswer(string postId, string commentId,
             string commentAnswerId, CancellationToken token)
         {
@@ -348,6 +354,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetAllCommentReactions)]
         [ValidateGuid("postId", "commentId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllCommentReactions(string postId, string commentId,
             CancellationToken token)
         {
@@ -365,6 +372,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpPost, Route(ApiRoutes.Post.AddCommentReaction)]
         [ValidateGuid("postId", "commentId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> AddCommentReaction(string postId, string commentId,
             [FromBody] CreateCommentReaction newReaction, CancellationToken token)
         {
@@ -384,6 +392,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemoveCommentReaction)]
         [ValidateGuid("postId", "commentId", "reactionId")]
+        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> RemoveCommentReaction(string postId, string commentId,
             string reactionId, CancellationToken token)
         {
@@ -401,29 +410,27 @@ namespace Blog.Api.Controllers.V1
             return NoContent();
         }
 
-        [NonAction]
-        public async Task<bool> UploadFile(IFormFile file, string prefix)
+
+        [HttpPost, Route(ApiRoutes.Post.UploadImage)]
+        public JsonResult UploadImage()
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", prefix + file.FileName);
+            var httpRequest = Request.Form;
+            var postedFile = httpRequest.Files[0];
+            string fileName = Guid.NewGuid() + "_" + postedFile.FileName;
+            var physicalPath = _env.ContentRootPath + "/wwwroot/images/" + fileName;
 
-            if (System.IO.File.Exists(path))
+            using(var stream = new FileStream(physicalPath, FileMode.Create))
             {
-                AddError("Já existe uma imagem com este nome!");
-                return false;
+                postedFile.CopyTo(stream);
             }
 
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            return true;
+            return new JsonResult(fileName);
         }
 
         [NonAction]
-        public void DeleteFile(string file)
+        public  void DeleteImage(string imageFileName)
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/" + file);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/" + imageFileName);
 
             if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
         }

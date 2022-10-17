@@ -1,4 +1,5 @@
 ﻿using Blog.Application.Enums;
+using Blog.Application.Identity;
 using Blog.Application.Models;
 using Blog.Application.UserProfiles.Commands;
 using Blog.Dal.Context;
@@ -15,6 +16,7 @@ namespace Blog.Application.UserProfiles.CommandHandlers
         public UpdateUserProfileCommandHandler(DataContext context)
         {
             _context = context;
+            _result = new OperationResult<bool>();
         }
 
         public async Task<OperationResult<bool>> Handle(UpdateUserProfileCommand request, 
@@ -22,20 +24,32 @@ namespace Blog.Application.UserProfiles.CommandHandlers
         {
             try
             {
+                var identityUser = await _context.Users
+                      .FirstOrDefaultAsync(i => i.Id == request.IdentityId, cancellationToken);
+
+                if (identityUser is null)
+                {
+                    _result.AddError(ErrorCode.NotFound, IdentityErrorMessages.IdentityUserNotFound);
+                    return _result;
+                }
+
                 var userProfile = await _context.UserProfiles.AsNoTracking()
-                      .FirstOrDefaultAsync(up => up.UserProfileId == request.UserProfileId, cancellationToken);
+                      .FirstOrDefaultAsync(up => up.IdentityId == request.IdentityId, cancellationToken);
 
                 if (userProfile is null)
                 {
                     _result.AddError(ErrorCode.NotFound, 
-                        string.Format(UserProfileErrorMessages.UserProfileNotFound, request.UserProfileId));                    return _result;
+                        string.Format(UserProfileErrorMessages.UserProfileNotFound, request.IdentityId));                    return _result;
                 }
+
+                identityUser.Email = request.EmailAddress;
 
                 var basicInfo = BasicInfo.CreateBasicInfo(request.FirstName, request.LastName, 
                     request.EmailAddress, request.Phone);
 
                 userProfile.UpdateBasicInfo(basicInfo);
 
+                _context.Users.Update(identityUser);
                 _context.UserProfiles.Update(userProfile);
                 await _context.SaveChangesAsync(cancellationToken);
 

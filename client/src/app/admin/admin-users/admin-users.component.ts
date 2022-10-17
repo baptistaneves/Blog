@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { UserRole } from './../../shared/models/user/userRole';
 import { UserApiService } from './../../data/user/user-api.service';
 import { UserProfile } from 'src/app/shared/models/user/userProfile';
 import { Modal } from 'src/app/shared/common/modal';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-users',
   templateUrl: './admin-users.component.html'
 })
 export class AdminUsersComponent implements OnInit {
+  errors: string[] = [];
+  removeErrors: string[] = [];
   identityId:string;
   roles: UserRole[];
   users: UserProfile[];
@@ -20,11 +22,10 @@ export class AdminUsersComponent implements OnInit {
 
   constructor(private userService: UserApiService,
               private formBuilder: FormBuilder,
-              private router: Router) { }
+              private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadUsers();
-    this.loadRoles();
     this.initializeAddForm();
     this.initializeUpdateForm();
   }
@@ -63,9 +64,8 @@ export class AdminUsersComponent implements OnInit {
       Modal.closeModal('bntClose');
       this.emptyFields();
       this.loadUsers();
-    }, errors => {
-      console.log(errors);
-    })
+      this.toastr.success("Usuário cadastrado com sucesso!");
+    }, errors => this.errors = errors)
   }
 
   initializeUpdateForm() {
@@ -92,14 +92,16 @@ export class AdminUsersComponent implements OnInit {
       Modal.closeModal('bntEditClose');
       this.emptyFields();
       this.loadUsers();
-    })
+      this.toastr.success("Usuário actualizado com sucesso!");
+    }, errors =>  this.errors = errors)
   }
 
   remove(userId:string) {
     if(confirm("Deseja realmente excluir este úsuario?")) {
       this.userService.removeUser(userId).subscribe(()=> {
         this.loadUsers();
-      })
+        this.toastr.success("Usuário removido com sucesso!");
+      }, errors => this.removeErrors = errors)
     }
   }
 

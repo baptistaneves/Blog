@@ -6,7 +6,7 @@
           <h1>Usuários</h1>
         </div>
         <div class="col-sm-6">
-          <h3 class="card-title d-flex justify-content-end w-100"><a href="#" class="btn btn-secondary" style="text-transform:capitalize;" data-toggle="modal" data-target="#Add"><i class="fa fa-plus"></i> Novo usuário</a></h3>
+          <h3 class="card-title d-flex justify-content-end w-100"><a href="#" class="btn btn-secondary" style="text-transform:capitalize;" (click)="loadRoles()" data-toggle="modal" data-target="#Add"><i class="fa fa-plus"></i> Novo usuário</a></h3>
         </div>
       </div>
     </div><!-- /.container-fluid -->
@@ -16,6 +16,8 @@
   <!-- /.card -->
   <div class="card">
     <div class="card-body">
+      <ul *ngIf="removeErrors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of removeErrors">{{error}}</li></ul>
+      
       <table *ngIf="users != null" class="table table-bordered table-striped">
         <thead>
         <tr>
@@ -69,6 +71,7 @@
       <div class="modal-body">
         <form [formGroup]="userAddForm" (ngSubmit)="create()">
           <div class="card-body">
+            <ul *ngIf="errors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of errors">{{error}}</li></ul>
             <div class="form-group">
               <input type="text" formControlName="firstName" class="form-control" placeholder="Primeiro Nome">
               <div *ngIf="f.firstName.errors && f.firstName.touched" class="text-danger">
@@ -132,6 +135,7 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="userUpdateForm" (ngSubmit)="update()">
+          <ul *ngIf="errors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of errors">{{error}}</li></ul>
           <div class="card-body">
             <div class="form-group">
               <input type="text" formControlName="firstName" class="form-control" placeholder="Primeiro Nome">

@@ -36,23 +36,15 @@ namespace Blog.Api.Controllers
             return BadRequest(_errorResponse);
         }
 
-        protected ActionResult HandleErrorResponse()
+        protected ActionResult HandleErrorResponse(string message)
         {
             _errorResponse.TimeStamp = DateTime.Now;
             _errorResponse.StatusCode = 400;
             _errorResponse.StatusPhrase = "Bad Request";
+            _errorResponse.Errors.Add(message);
 
             return BadRequest(_errorResponse);
         }
 
-        protected void AddError(string errorMessage)
-        {
-            _errorResponse.Errors.Add(errorMessage);
-        }
-
-        protected bool HasErrorResponse()
-        {
-            return _errorResponse.Errors.Any();
-        }
     }
 }

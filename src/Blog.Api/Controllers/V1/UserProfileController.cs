@@ -58,13 +58,13 @@ namespace Blog.Api.Controllers.V1
         
         [HttpPatch, Route(ApiRoutes.UserProfile.UpdateUserProfile)]
         [Authorize(Roles = "Admin,Editor,User")]
-        [ValidateGuid("userProfileId")]
+        [ValidateGuid("identityId")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileRequest updatedUser,
-            string userProfileId, CancellationToken token)
+        public async Task<IActionResult> UpdateUserProfile(string identityId, [FromBody] UpdateUserProfileRequest updatedUser,
+             CancellationToken token)
         {
             var command = _mapper.Map<UpdateUserProfileCommand>(updatedUser);
-            command.UserProfileId = Guid.Parse(userProfileId);
+            command.IdentityId = identityId;
 
             var result = await _mediator.Send(command, token);
             if (result.IsError) return HandleErrorResponse(result.Errors);

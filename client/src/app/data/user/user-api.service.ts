@@ -34,6 +34,10 @@ export class UserApiService {
     return this.http.get<UserProfile>(this.baseUrl + "userProfile/obter-usuario-por-id/" + userId);
   }
 
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(this.baseUrl + "identity/obter-usuario-logado");
+  }
+
   createAdminUser(user: CreateAdminUser): Observable<User> {
     return this.http.post<User>(this.baseUrl + "identity/novo-usuario", user);
   }
@@ -56,6 +60,10 @@ export class UserApiService {
   
   login(login: Login): Observable<User> {
     return this.http.post<User>(this.baseUrl + "identity/login", login);
+  }
+
+  logout(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + "identity/logout");
   }
 
 }

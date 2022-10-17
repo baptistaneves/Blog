@@ -8,17 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Application.Posts.CommandHandlers
 {
-    public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, OperationResult<bool>>
+    public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, OperationResult<string>>
     {
         private readonly DataContext _context;
-        private readonly OperationResult<bool> _result;
+        private readonly OperationResult<string> _result;
         public UpdatePostCommandHandler(DataContext context)
         {
             _context = context;
-            _result = new OperationResult<bool>();
+            _result = new OperationResult<string>();
         }
 
-        public async Task<OperationResult<bool>> Handle(UpdatePostCommand request, 
+        public async Task<OperationResult<string>> Handle(UpdatePostCommand request, 
             CancellationToken cancellationToken)
         {
             try
@@ -26,12 +26,16 @@ namespace Blog.Application.Posts.CommandHandlers
                 await PostTitleAlreadyExists(request.Title, request.PostId, _result, cancellationToken);
                 if (_result.IsError) return _result;
 
+                
                 var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == request.PostId, cancellationToken);
+               
                 if (post is null)
                 {
                     _result.AddError(ErrorCode.NotFound, PostErrorMessages.PostNotFound);
                     return _result;
                 }
+
+                var postOldImage = post.Image;
 
                 request.Image = String.IsNullOrWhiteSpace(request.Image) ? post.Image : request.Image;
 
@@ -40,7 +44,7 @@ namespace Blog.Application.Posts.CommandHandlers
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                _result.Payload = true;
+                _result.Payload = postOldImage;
             }
             catch (PostNotValidException ex)
             {
@@ -55,7 +59,7 @@ namespace Blog.Application.Posts.CommandHandlers
         }
 
         private async Task PostTitleAlreadyExists(string title, Guid postId,
-                     OperationResult<bool> result, CancellationToken token)
+                     OperationResult<string> result, CancellationToken token)
         {
             var post = await _context.Posts.FirstOrDefaultAsync(p => p.Title == title && p.PostId != postId, token);
             if (post != null)

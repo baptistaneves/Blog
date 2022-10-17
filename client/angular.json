@@ -28,17 +28,18 @@
             ],
             "styles": [
               "src/assets/adminLte/plugins/fontawesome/css/all.min.css",
-              "src/assets/adminLte/dist/css/adminlte.min.css", 
+              "src/assets/adminLte/dist/css/adminlte.min.css",
               "src/assets/site/css/clean-blog.min.css", 
               "src/assets/site/vendor/bootstrap/css/bootstrap.min.css", 
+              "node_modules/ngx-toastr/toastr.css", 
               "src/styles.css" 
             ],
             "scripts": [
               "src/assets/adminLte/plugins/jquery/jquery.min.js",
               "src/assets/adminLte/plugins/bootstrap/js/bootstrap.bundle.min.js",
               "src/assets/adminLte/dist/js/adminlte.min.js",
-              "src/assets/site/js/clean-blog.min.js",
               "src/assets/site/vendor/jquery/jquery.min.js",
+              "src/assets/site/js/clean-blog.min.js",
               "src/assets/site/vendor/bootstrap/js/bootstrap.min.js"
             ]
           },

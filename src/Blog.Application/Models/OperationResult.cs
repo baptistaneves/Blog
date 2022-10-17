@@ -15,6 +15,7 @@ namespace Blog.Application.Models
 
         public void AddUnknownError(string message)
         {
+            IsError = true;
             Errors.Add(new Error { Code = ErrorCode.UnknownError, Message = message });
         }
 

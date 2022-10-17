@@ -8,7 +8,9 @@
         public static class Identity
         {
             public const string GetAllRoles = "obter-tipos-de-usuarios";
+            public const string GetCurrentUser = "obter-usuario-logado";
             public const string Login = "login";
+            public const string Logout = "logout";
             public const string Register = "registar-se";
             public const string CreateUser = "novo-usuario";
             public const string DeleteAccount = "excluir-minha-conta/{identityUserId}";
@@ -20,7 +22,7 @@
             public const string GetPublicUserProfiles = "obter-usuarios-publicos";
             public const string GetAdminUserProfiles = "obter-usuarios-admins";
             public const string GetUserProfileById = "obter-usuario-por-id/{userProfileId}";
-            public const string UpdateUserProfile = "actualizar-usuario/{userProfileId}";
+            public const string UpdateUserProfile = "actualizar-usuario/{identityId}";
         }
 
         public static class Category
@@ -39,6 +41,7 @@
             public const string CreatePost = "nova-noticia";
             public const string RemovePost = "remover-noticia/{postId}";
             public const string UpdatePost = "actualizar-noticia/{postId}";
+            public const string UploadImage = "enviar-imagem";
 
             //Comments
             public const string GetAllPostComments = "{postId}/comentarios";

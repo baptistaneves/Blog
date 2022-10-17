@@ -18,7 +18,7 @@
           <!-- Right navbar links -->
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link text-danger" style="cursor:pointer;">
+              <a (click)="logout()" class="nav-link text-danger" style="cursor:pointer;">
                 <i class="fa fa-power-off"></i>
               </a>
             </li>
@@ -41,9 +41,9 @@
           <!-- Sidebar -->
           <div class="sidebar">
             <!-- Sidebar user (optional) -->
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div *ngIf="(currentUser$ | async) as user" class="user-panel mt-3 pb-3 mb-3 d-flex">
               <div class="info">
-                <a [routerLink]="['/admin/perfil']" class="d-block">Baptista Neves</a>
+                <a [routerLink]="['/admin/perfil']" class="d-block">{{user.userName}}</a>
               </div>
             </div>
       
@@ -105,3 +105,4 @@
         <!-- /.control-sidebar -->
       </div>
 </div>
+

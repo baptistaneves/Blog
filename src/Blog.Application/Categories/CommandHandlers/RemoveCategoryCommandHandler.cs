@@ -35,7 +35,7 @@ namespace Blog.Application.Categories.CommandHandlers
 
                 if(category.Posts.Any())
                 {
-                    _result.AddError(ErrorCode.NotFound, CategoryErrorMessages.CategoryRemovalNotAuthorized);
+                    _result.AddError(ErrorCode.CategoryHasPosts, CategoryErrorMessages.CategoryRemovalNotAuthorized);
                     return _result;
                 }
 

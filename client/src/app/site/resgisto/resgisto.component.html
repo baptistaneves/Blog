@@ -1,0 +1,77 @@
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('/assets/site/img/contact-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>Faça Seu Registo</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+          <ul *ngIf="errors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of errors">{{error}}</li></ul>
+
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Primeiro Nome</label>
+              <input type="text" class="form-control" placeholder="Primeiro Nome" formControlName="firstName">
+              <div *ngIf="f.firstName.errors && f.firstName.touched" class="help-block text-danger">
+                <p *ngIf="f.firstName.errors.required">Informe o primeiro nome</p>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Último Nome</label>
+              <input type="text" class="form-control" placeholder="Último Nome" formControlName="lastName">
+              <div *ngIf="f.lastName.errors && f.lastName.touched" class="help-block text-danger">
+                <p *ngIf="f.lastName.errors.required">Informe o último nome</p>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>E-mail</label>
+              <input type="email" class="form-control" placeholder="E-mail" formControlName="emailAddress">
+              <div *ngIf="f.emailAddress.errors && f.emailAddress.touched" class="help-block text-danger">
+                <p *ngIf="f.emailAddress.errors.required">Informe o e-mail</p>
+                <p *ngIf="f.emailAddress.errors.email">E-mail inválido</p>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group col-xs-12 floating-label-form-group controls">
+              <label>Telefone</label>
+              <input type="text" class="form-control" placeholder="Telefone" formControlName="phone">
+              <div *ngIf="f.phone.errors && f.phone.touched" class="help-block text-danger">
+                <p *ngIf="f.phone.errors.required">Informe o telefone</p>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Senha</label>
+              <input type="password" class="form-control" placeholder="Senha" formControlName="password">
+              <div *ngIf="f.password.errors && f.password.touched" class="help-block text-danger">
+                <p *ngIf="f.password.errors.required">Informe a senha</p>
+                <p *ngIf="f.password.errors.minlength">A senha deve ter no minimo 6 caracteres</p>
+              </div>
+            </div>
+          </div>
+          <br>
+          <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Registar-se</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <hr>

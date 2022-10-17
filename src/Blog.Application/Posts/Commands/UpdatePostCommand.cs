@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Blog.Application.Posts.Commands
 {
-    public class UpdatePostCommand : IRequest<OperationResult<bool>>
+    public class UpdatePostCommand : IRequest<OperationResult<string>>
     {
         public Guid PostId { get; set; }
         public Guid CategoryId { get; set; }

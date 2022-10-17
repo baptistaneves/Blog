@@ -1,0 +1,76 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <h1>Notícias</h1>
+        </div>
+        <div class="col-sm-6">
+          <h3 class="card-title d-flex justify-content-end w-100"><a routerLink="/admin/nova-noticia" class="btn btn-secondary" style="text-transform:capitalize;" ><i class="fa fa-plus"></i> Nova notícia</a></h3>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <div class="container-fluid">
+  <!-- /.card -->
+  <div class="card">
+    <div class="card-body">
+      <ul *ngIf="errors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of errors">{{error}}</li></ul>
+      
+      <table *ngIf="posts != null" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>Título</th>
+          <th>Categoria</th>
+          <th>Criado em</th>
+          <th>Criado por</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let post of posts | paginate: {
+        itemsPerPage: pagination.itemsPerPage,
+        currentPage: pagination.currentPage,
+        totalItems: pagination.totalItems }">
+          <td>{{ (post.title.length > 25)?(post.title | slice:0:25) + '...' : post.title }}</td>
+          <td>{{post.categoryDescritpion}}</td>
+          <td>{{post.createdAt | date}}</td>
+          <td>{{post.createdBy}}</td>
+          <td>
+            <a href="#" class="btn btn-sm btn-primary" routerLink="/admin/actualizar-noticia/{{post.postId}}"><i class="fa fa-edit"></i></a>
+            <a class="btn btn-sm btn-danger ml-1" (click)="remove(post.postId)"><i class="fa fa-trash"></i></a>
+          </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <th>Título</th>
+          <th>Categoria</th>
+          <th>Criado em</th>
+          <th>Criado por</th>
+          <th></th>
+        </tr>
+        </tfoot>
+      </table>
+      <div class="row">
+        <div class="col-md-6 my-3">
+            <pagination-controls
+                      (pageChange)="onPageChange($event)"
+                      [directionLinks]="true"
+                      [responsive]="true"
+                      previousLabel="Anterior"
+                      nextLabel="Próximo">
+            </pagination-controls>
+        </div>
+      </div>
+      <div *ngIf="posts == null" class="alert alert-danger">
+        <p>Não existem notícias cadastradas!</p>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+
+

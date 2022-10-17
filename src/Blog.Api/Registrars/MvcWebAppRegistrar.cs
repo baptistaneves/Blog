@@ -1,10 +1,12 @@
-﻿namespace Blog.Api.Registrars
+﻿using Microsoft.Extensions.FileProviders;
+
+namespace Blog.Api.Registrars
 {
     public class MvcWebAppRegistrar : IWebApplicationRegistrar
     {
         public void RegisterServices(WebApplication app)
         {
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            //app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseSwagger();
             app.UseSwaggerUI(options =>
@@ -18,6 +20,7 @@
                 }
             });
 
+            
             app.UseHttpsRedirection();
 
             app.UseCors(policy =>
@@ -27,10 +30,19 @@
                 policy.WithOrigins("http://localhost:4200");
             });
 
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images")),
+                RequestPath = "/wwwroot/images"
+
+            });
         }
     }
 }
