@@ -1,3 +1,4 @@
+import { PostCommentDto } from './../../shared/models/post/postCommentDto';
 import { PaginationHeader } from './../../shared/common/paginationHeader';
 import { HttpBackend, HttpParams } from '@angular/common/http';
 import { PaginationParams } from './../../shared/common/paginationParams';
@@ -8,6 +9,7 @@ import { Injectable } from '@angular/core';
 import { PostDto } from 'src/app/shared/models/post/postDto';
 import { Post } from 'src/app/shared/models/post/post';
 import { PaginatedResult } from 'src/app/shared/common/paginatedResult';
+import { PostComment } from 'src/app/shared/models/post/postComment';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +46,15 @@ export class PostApiService {
 
   remove(postId:string) : Observable<any> {
     return this.http.delete<any>(this.baseUrl + "posts/remover-noticia/" + postId);
+  }
+
+  //post comments
+  getAllPostsComments(postId:string) : Observable<PostCommentDto[]> {
+    return this.http.get<PostCommentDto[]>(this.baseUrl + "posts/" + postId + "/comentarios");
+  }
+
+  addPostComment(postId:string, postComment:PostComment) : Observable<PostCommentDto>{
+    return this.http.post<PostCommentDto>(this.baseUrl + "posts/" + postId + "/adicionar-comentario", postComment);
   }
 
   getPaginatedResult<T>(url:string, params: HttpParams)  {

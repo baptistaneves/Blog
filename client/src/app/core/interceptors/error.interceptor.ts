@@ -32,7 +32,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               }
               break;
             case 401:
-              this.router.navigate(["/admin/login"]);
+              this.toastr.warning("Você não está logado!")
               break;
             case 403:
               this.toastr.error("Acesso Negado!")

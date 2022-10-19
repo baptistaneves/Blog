@@ -25,3 +25,47 @@
         </div>
     </div>
 </article>
+
+<!-- Post Comment -->
+<article class="mt-5">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <h4>Comentários</h4>
+            <div class="mx-5 my-3">
+              <div *ngFor="let postComment of postComments">
+                <div class="post-preview">
+                  <p class="post-meta">
+                    <span>{{postComment.userFullName}}</span><br>
+                    <span style="color: #444;">{{postComment.text}}</span>
+                    <span class="ml-3" style="font-size: 14px;">{{postComment.createdAt | date}}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</article>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <form [formGroup]="postCommentForm" (ngSubmit)="addComment()">
+        <ul *ngIf="errors.length > 0" class="alert alert-danger my-3" style="list-style:none"><li *ngFor="let error of errors">{{error}}</li></ul>
+
+        <div class="control-group">
+          <div class="form-group floating-label-form-group controls">
+            <label *ngIf="(currentUser$ | async) as user">@ {{user.firstName}} {{user.lastName}}</label>
+            <input type="text" class="form-control" placeholder="Seu comentário" formControlName="text">
+            <div *ngIf="f.text.errors && f.text.touched" class="help-block text-danger">
+              <p *ngIf="f.text.errors.required">Digite o comentário</p>
+            </div>
+          </div>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary" [disabled]="postCommentForm.invalid">Comentar</button>
+      </form>
+    </div>
+  </div>
+</div>

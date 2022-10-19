@@ -48,7 +48,7 @@ export class AuthService {
 
     return this.userService.getCurrentUser().pipe(
       map(user => {
-        this.setAuth(user);
+        if(user) this.setAuth(user);
       })
     )
 

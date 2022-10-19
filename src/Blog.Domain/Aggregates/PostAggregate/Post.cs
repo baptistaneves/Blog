@@ -8,6 +8,7 @@ namespace Blog.Domain.Aggregates.PostAggregate
     public class Post
     {
         private readonly List<PostReaction> _reactions = new List<PostReaction>();
+        private readonly List<PostComment> _comments = new List<PostComment>();
         private Post() { }
 
         public Guid PostId { get; private set; }
@@ -23,9 +24,7 @@ namespace Blog.Domain.Aggregates.PostAggregate
         public UserProfile UserProfile { get; private set; }
         public Category Category { get; private set; }
         public IEnumerable<PostReaction> Reactions { get { return _reactions; } }
-
-        private readonly List<PostComment> _comments;
-        public IReadOnlyCollection<PostComment> Comments  => _comments;
+        public IEnumerable<PostComment> Comments { get { return _comments; } }
 
 
         /// <summary>

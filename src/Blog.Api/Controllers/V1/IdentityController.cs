@@ -17,10 +17,14 @@ namespace Blog.Api.Controllers.V1
             _mapper = mapper;
         }
 
+
         [HttpGet, Route(ApiRoutes.Identity.GetCurrentUser)]
         public async Task<IActionResult> GetCurrentUser(CancellationToken token)
         {
-            var query = new GetCurrentUserQuery { IdentityId = HttpContext.GetIdentityIdClaimValue() };
+            
+            if (!HttpContext.User.Identity.IsAuthenticated) return NoContent();
+
+            var query = new GetCurrentUserQuery { IdentityId = HttpContext.GetIdentityIdClaimValue()};
 
             var result = await _mediator.Send(query, token);
             if(result.IsError) return HandleErrorResponse(result.Errors);

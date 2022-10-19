@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { JwtTokenService } from 'src/app/core/services/jwt-token.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -13,6 +14,7 @@ export class AdminLayoutComponent implements OnInit {
   currentUser$: Observable<User | null>;
 
   constructor(private authService: AuthService,
+              private tokenService:JwtTokenService,
               private router: Router) { }
 
   ngOnInit(): void {

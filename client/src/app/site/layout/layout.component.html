@@ -8,15 +8,29 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/']">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/registar-se']">Registar-se</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="modal" data-target="#login"><i class="fa fa-user-lock mr-2"></i>Entrar</a>
-          </li>
+          <ng-container *ngIf="(currentUser$ | async) === null">
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/']">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/registar-se']">Registar-se</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-toggle="modal" data-target="#login"><i class="fa fa-user-lock mr-2"></i>Entrar</a>
+            </li>
+          </ng-container>
+
+          <ng-container *ngIf="(currentUser$ | async) as user">
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/']">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="fa fa-user-lock mr-2"></i>{{user.firstName}} {{user.lastName}}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" (click)="logout()">Sair</a>
+            </li>
+          </ng-container>
         </ul>
       </div>
     </div>

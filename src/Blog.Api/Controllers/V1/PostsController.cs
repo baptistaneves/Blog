@@ -118,7 +118,6 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetAllPostComments)]
         [ValidateGuid("postId")]
-        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllPostComments(string postId, CancellationToken token)
         {
             var query = new GetAllPostCommentsQuery { PostId = Guid.Parse(postId) };
@@ -131,7 +130,6 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetCommentById)]
         [ValidateGuid("postId", "commentId")]
-        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetCommentById(string postId, string commentId, CancellationToken token)
         {
             var query = new GetPostCommentByIdQuery
@@ -148,7 +146,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPost, Route(ApiRoutes.Post.AddPostComment)]
         [ValidateGuid("postId")]
         [ValidateModel]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> AddPostComment(string postId, [FromBody] CreateUpdatePostComment newComment,
             CancellationToken token)
         {
@@ -168,7 +166,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPut, Route(ApiRoutes.Post.UpdateComment)]
         [ValidateGuid("postId", "commentId")]
         [ValidateModel]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> UpdatePostComment(string postId, string commentId,
             [FromBody] CreateUpdatePostComment updatedComment, CancellationToken token)
         {
@@ -187,7 +185,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemovePostComment)]
         [ValidateGuid("postId", "commentId")]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> RemovePostComment(string postId, string commentId,
             CancellationToken token)
         {
@@ -206,7 +204,6 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetAllPostReactions)]
         [ValidateGuid("postId")]
-        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllPostReactions(string postId, CancellationToken token)
         {
             var query = new GetAllPostReactionsQuery { PostId = Guid.Parse(postId) };
@@ -219,7 +216,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpPost, Route(ApiRoutes.Post.AddPostReaction)]
         [ValidateGuid("postId")]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> AddPostReaction(string postId, [FromBody] CreatePostReaction reaction,
             CancellationToken token)
         {
@@ -238,7 +235,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemovePostReaction)]
         [ValidateGuid("postId", "reactionId")]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> RemovePostReaction(string postId, string reactionId,
             CancellationToken token)
         {
@@ -256,7 +253,6 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetAllCommentAnswers)]
         [ValidateGuid("postId", "commentId")]
-        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllCommentAnswers(string postId, string commentId,
             CancellationToken token)
         {
@@ -274,7 +270,6 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetCommentAnswerById)]
         [ValidateGuid("postId", "commentId", "commentAnswerId")]
-        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetCommentAnswerById(string postId, string commentId,
             string commentAnswerId, CancellationToken token)
         {
@@ -294,7 +289,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPost, Route(ApiRoutes.Post.AddCommentAnswer)]
         [ValidateGuid("postId", "commentId")]
         [ValidateModel]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> AddCommentAnswer(string postId, string commentId,
             [FromBody] CreateUpdateCommentAnswer newAnswer, CancellationToken token)
         {
@@ -315,7 +310,7 @@ namespace Blog.Api.Controllers.V1
         [HttpPut, Route(ApiRoutes.Post.UpdateCommentAnswer)]
         [ValidateGuid("postId", "commentId", "commentAnswerId")]
         [ValidateModel]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> UpdateCommentAnswer(string postId, string commentId,
             string commentAnswerId, [FromBody] CreateUpdateCommentAnswer answerUpdated, CancellationToken token)
         {
@@ -335,7 +330,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemoveCommentAnswer)]
         [ValidateGuid("postId", "commentId", "commentAnswerId")]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> RemoveCommentAnswer(string postId, string commentId,
             string commentAnswerId, CancellationToken token)
         {
@@ -354,7 +349,6 @@ namespace Blog.Api.Controllers.V1
 
         [HttpGet, Route(ApiRoutes.Post.GetAllCommentReactions)]
         [ValidateGuid("postId", "commentId")]
-        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAllCommentReactions(string postId, string commentId,
             CancellationToken token)
         {
@@ -372,7 +366,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpPost, Route(ApiRoutes.Post.AddCommentReaction)]
         [ValidateGuid("postId", "commentId")]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> AddCommentReaction(string postId, string commentId,
             [FromBody] CreateCommentReaction newReaction, CancellationToken token)
         {
@@ -392,7 +386,7 @@ namespace Blog.Api.Controllers.V1
 
         [HttpDelete, Route(ApiRoutes.Post.RemoveCommentReaction)]
         [ValidateGuid("postId", "commentId", "reactionId")]
-        [Authorize(Roles = "Admin, Editor")]
+        [Authorize(Roles = "Admin, Editor, User")]
         public async Task<IActionResult> RemoveCommentReaction(string postId, string commentId,
             string reactionId, CancellationToken token)
         {

@@ -1,9 +1,11 @@
+import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Modal } from 'src/app/shared/common/modal';
+import { User } from 'src/app/shared/models/user/user';
 
 @Component({
   selector: 'app-layout',
@@ -13,6 +15,7 @@ export class LayoutComponent implements OnInit {
 
   loginForm:FormGroup;
   errors:string[] = [];
+  currentUser$: Observable<User | null>;
 
   constructor(private authService:AuthService,
               private formBuilder:FormBuilder,
@@ -20,6 +23,7 @@ export class LayoutComponent implements OnInit {
               private toastr:ToastrService) { }
 
   ngOnInit(): void {
+    this.currentUser$ = this.authService.currentUser$;
     this.initializeForm();
   }
   
@@ -43,6 +47,11 @@ export class LayoutComponent implements OnInit {
       this.toastr.success("Login realizado com sucesso");
       this.router.navigate(['/']);
     }, errors => this.errors = errors)
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(["/"]);
   }
 
 }
